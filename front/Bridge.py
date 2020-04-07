@@ -57,7 +57,7 @@ class Bridge(QQuickWidget):
     @Slot(str)
     def read_filename(self, filename):
         self.__controller.set_ri(False)
-        self.__controller.set_source(filename)
+        self.__controller.change_source(filename)
 
     @Slot(result=str)
     def get_default_filename(self):
@@ -69,16 +69,10 @@ class Bridge(QQuickWidget):
 
     def keyPressEvent(self, q_key_event: QEvent):
 
-        # must react even with error
         if q_key_event.key() == Qt.Key_Alt:
             self.__controller.set_ri(True)
             return True
-
-        if self.error_happened():
-            return super().keyPressEvent(q_key_event)
-
-        # must react only if no errors happened
-        if q_key_event.key() == Qt.Key_Space:
+        elif q_key_event.key() == Qt.Key_Space:
             # if self.__timer and self.__timer.isActive():
             if self.__controller.get_pi():
                 self.__controller.stop_playing()

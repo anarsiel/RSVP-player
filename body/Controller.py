@@ -11,12 +11,13 @@ class Controller:
         self.__validator = Validator()
 
         self.__wpm = None
-        self.__word_idx = -1
+        self.__source_to_index = {}
 
         # defaults
-        self.set_source("example.txt")
-        self.set_wpm(250)
         self.__default_word = "Space - Start/Stop"
+        self.__source = "example.txt"
+        self.set_source(self.get_source())
+        self.set_wpm(250)
 
         # variables for front feedback
         self.__word = self.__default_word
@@ -30,7 +31,7 @@ class Controller:
 
     def __get_word(self):
         try:
-            return self.__model.get_word(self.__word_idx)
+            return self.__model.get_word(self.__source_to_index[self.get_source()])
         except Model.EndOfSourceException as exception:
             raise Controller.EndOfSourceException() from exception
         except Model.StartOfSourceException as exception:
@@ -71,24 +72,25 @@ class Controller:
         self.set_word(self.get_default_word())
         self.set_em(None)
 
-        self.__word_idx = -1
+        self.__source_to_index[self.get_source()] = -1
 
         self.stop_playing()
         self.__timer.delete()
 
     def change_source(self, source):
+        if self.__source == source:
+            return
+
         pi_copy = self.get_pi()
 
         try:
             self.stop_playing()
 
             self.set_source(source)
-            self.go_to_start()
-
             self.set_em(None)
         except Controller.WrongSourceNameException:
             self.set_em("wrong filename")
-        finally:
+
             self.set_pi(pi_copy)
             if self.get_pi():
                 self.start_playing()
@@ -108,19 +110,19 @@ class Controller:
             pass
 
     def get_next_word(self):
-        self.__word_idx += 1
+        self.__source_to_index[self.get_source()] += 1
         try:
             self.set_word(self.__get_word())
         except Controller.EndOfSourceException:
-            self.__word_idx -= 1
+            self.__source_to_index[self.get_source()] -= 1
             self.set_word(self.__get_word())
 
     def get_previous_word(self):
-        self.__word_idx -= 1
+        self.__source_to_index[self.get_source()] -= 1
         try:
             self.set_word(self.__get_word())
         except Controller.StartOfSourceException:
-            self.__word_idx += 1
+            self.__source_to_index[self.get_source()] += 1
             self.set_word(self.__get_word())
 
     def error_happened(self):
@@ -202,12 +204,18 @@ class Controller:
     ####################################
 
     def get_source(self):
-        return self.__model.get_source()
+        return self.__source
 
     def set_source(self, source):
         try:
-            self.__word_idx = -1
             self.__model.set_source(source)
+
+            self.__source = source
+            if not source in self.__source_to_index.keys():
+                self.__source_to_index[source] = -1
+                self.set_word(self.get_default_word())
+            else:
+                self.set_word(self.__get_word())
         except Model.SourceFileException as exception:
             raise Controller.WrongSourceNameException from exception
 
