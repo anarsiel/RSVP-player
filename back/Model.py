@@ -1,6 +1,3 @@
-from body.CustomExceptions import CustomClassException
-
-
 class Model:
 
     def __init__(self, source=None):
@@ -43,12 +40,12 @@ class Model:
     #   Exceptions
     #
 
-    class SourceFileException(CustomClassException):
+    class SourceFileException(Exception):
         pass
 
-    class EndOfSourceException(CustomClassException):
+    class EndOfSourceException(Exception):
         pass
 
-    class StartOfSourceException(CustomClassException):
+    class StartOfSourceException(Exception):
         pass
 

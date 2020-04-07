@@ -172,7 +172,7 @@ Item {
                     topPadding: 0
 
                     Text {
-                        text: "Error: dksjflksdjklfjsdlkfj"
+                        text: ""
                         color: '#BC0022'
 
                         FpsTimer {
