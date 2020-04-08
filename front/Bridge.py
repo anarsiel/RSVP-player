@@ -63,6 +63,10 @@ class Bridge(QQuickWidget):
     def get_default_filename(self):
         return self.__controller.get_source()
 
+    @Slot(result=float)
+    def get_progress(self):
+        return self.__controller.get_progress()
+
     #
     #   Events
     #
@@ -73,7 +77,6 @@ class Bridge(QQuickWidget):
             self.__controller.set_ri(True)
             return True
         elif q_key_event.key() == Qt.Key_Space:
-            # if self.__timer and self.__timer.isActive():
             if self.__controller.get_pi():
                 self.__controller.stop_playing()
             else:

@@ -2,27 +2,10 @@ import QtQuick 2.14
 import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.11
 
-
 Item {
     width: 400
     height: 300
     visible: true
-
-//    Rectangle {
-//        width: parent.width
-//        height: parent.height / 5
-//        color: '#808080'
-//
-//        Text {
-//            anchors.horizontalCenter: parent.horizontalCenter
-//            anchors.bottom: parent.bottom
-//
-//            text: "RSVP player 2020"
-////            font.family: 'Helvetica [Cronyx]'
-//            font.pointSize: 30
-//            font.styleName: font.italic
-//        }
-//    }
 
     Layout.maximumWidth: 400
     Layout.minimumWidth: 400
@@ -32,12 +15,8 @@ Item {
 
     Rectangle {
         width: parent.width
-//        height: 4 * parent.height / 5
         height: parent.height
         anchors.bottom: parent.bottom
-
-        color: "black"
-
 
         Rectangle {
             id: upper_halfh
@@ -46,6 +25,7 @@ Item {
             color: '#808080'
 
             Rectangle {
+                id: word_window
                 width: 2 * parent.width / 3
                 height: 2 * parent.height / 3
                 anchors.centerIn: parent
@@ -54,15 +34,18 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 20
 
-                Row {
-                    anchors.margins: 1
-                    anchors.verticalCenter: parent.verticalCenter
-                    spacing: 0
+//                Row {
+//                    anchors.margins: 1
+////                    anchors.verticalCenter: parent.verticalCenter
+//                    anchors.centerIn: word_window
+//                    spacing: 0
 
                     Text {
                         id: main_word1
                         text: bridge.get_word_A()
                         padding: 0
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: main_word2.left
 
                         FpsTimer {
                             onTriggered: main_word1.text = bridge.get_word_A()
@@ -74,6 +57,7 @@ Item {
                         text: bridge.get_word_B()
                         color: "red"
                         padding: 0
+                        anchors.centerIn: parent
 
                         FpsTimer {
                             onTriggered: main_word2.text = bridge.get_word_B()
@@ -84,11 +68,55 @@ Item {
                         id: main_word3
                         text: bridge.get_word_C()
                         padding: 0
+                        anchors.left: main_word2.right
+                        anchors.verticalCenter: parent.verticalCenter
 
                         FpsTimer {
                             onTriggered: main_word3.text = bridge.get_word_C()
                         }
                     }
+//                }
+            }
+
+            Rectangle {
+                id: bar
+                width: 2 * parent.width / 3
+                height: parent.height / 20
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                anchors.top: word_window.bottom
+                anchors.left: word_window.left
+
+                color: "#AFEEEE"
+
+//                FpsTimer {
+//                    onTriggered: bar_done.width = bridge.get_progress() * bar.width
+//                }
+
+                FpsTimer {
+                    onTriggered: bar_not_done.width = (1 - bridge.get_progress()) * bar.width
+                }
+
+//                Rectangle {
+//                    id: bar_done
+//                    height: parent.height
+//                    width: 1
+//
+//                    anchors.left: parent.left
+//                    anchors.top: parent.top
+//
+//                    color: "green"
+//                }
+
+                Rectangle {
+                    id: bar_not_done
+                    height: parent.height
+                    width: parent.width
+
+                    anchors.top: parent.top
+                    anchors.right: parent.right
+
+                    color: "#20B2AA"
                 }
             }
         }

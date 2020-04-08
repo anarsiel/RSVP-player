@@ -1,4 +1,5 @@
 from back.Model import Model
+from body.RsvppsFileParser import RsvppsFileParser
 from body.Validator import Validator
 from front.Timer import Timer
 
@@ -14,16 +15,27 @@ class Controller:
         self.__source_to_index = {}
 
         # defaults
-        self.__default_word = "Space - Start/Stop"
-        self.__source = "example.txt"
-        self.set_source(self.get_source())
-        self.set_wpm(250)
+        self.__default_dict = {"wpm" : 250,
+                               "dem" : " ",
+                               "ds"  : "example.txt",
+                               "zw"  : "Space - Start/Stop"}
 
+        self.__default_dict = RsvppsFileParser.parse (
+            self.__default_dict,
+            ".rsvp-player-settings/default.rsvpps"
+        )
+
+        self.__default_word = self.__default_dict["zw"]
+        self.__source = self.__default_dict["ds"]
+        self.set_wpm(int(self.__default_dict["wpm"]))
+        self.__default_em = self.__default_dict["dem"]
+
+        self.set_source(self.get_source())
         # variables for front feedback
         self.__word = self.__default_word
         self.__player_indicator = False
         self.__reading_indicator = False
-        self.__error_message = None
+        self.__error_message = self.__default_em
 
     #
     #   Private
@@ -78,7 +90,7 @@ class Controller:
         self.__timer.delete()
 
     def change_source(self, source):
-        if self.__source == source:
+        if not source or self.__source == source:
             return
 
         pi_copy = self.get_pi()
@@ -89,7 +101,7 @@ class Controller:
             self.set_source(source)
             self.set_em(None)
         except Controller.WrongSourceNameException:
-            self.set_em("wrong filename")
+            self.set_em("Wrong filename")
 
             self.set_pi(pi_copy)
             if self.get_pi():
@@ -143,6 +155,10 @@ class Controller:
 
         return [before, red_symbol, after]
 
+    def get_progress(self):
+        idx = max(self.__source_to_index[self.__source], 0)
+        return idx / (self.__model.get_cnt_words() - 1)
+
     #
     #   Getters - Setters
     #
@@ -194,7 +210,7 @@ class Controller:
         self.__validator.validate('wpm', wpm)
 
         try:
-            if wpm == 0:
+            if wpm == 0 and self.__wpm is not None:
                 raise Controller.StopTimerException()
             elif wpm > 0 and self.__wpm == 0:
                 raise Controller.StartTimerException()
@@ -240,4 +256,5 @@ class Controller:
 
     class StartTimerException(Exception):
         pass
+
 

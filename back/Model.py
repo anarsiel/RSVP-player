@@ -1,3 +1,6 @@
+import re
+
+
 class Model:
 
     def __init__(self, source=None):
@@ -17,7 +20,8 @@ class Model:
 
         try:
             with open(self.__source) as file:
-                self.__words = file.read().split(" ")
+                self.__words = list(filter(None, re.split("[ \n]+", file.read())))
+                # self.__words = file.read().split(" ")
         except FileNotFoundError as exception:
             raise Model.SourceFileException(f"Source file {self.__source} doesn't exists") from exception
 
@@ -36,6 +40,12 @@ class Model:
 
     def get_source(self):
         return self.__source
+
+    def get_cnt_words(self):
+        if self.__words:
+            return len(self.__words)
+        return 239
+
     #
     #   Exceptions
     #
