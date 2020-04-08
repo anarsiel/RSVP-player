@@ -1,0 +1,13 @@
+# default player setting file
+
+# Speed
+wpm  :   239
+
+# greeting and zero word
+zw   :   Space - Start/Stop
+
+# default source file
+ds   :   example.txt
+
+# default error message
+dem  :   ' '
