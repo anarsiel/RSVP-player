@@ -91,6 +91,7 @@ class Controller:
 
     def change_source(self, source):
         if not source or self.__source == source:
+            self.set_em(self.__default_dict['dem'])
             return
 
         pi_copy = self.get_pi()
@@ -100,6 +101,7 @@ class Controller:
 
             self.set_source(source)
             self.set_em(None)
+            self.set_em(self.__default_dict['dem'])
         except Controller.WrongSourceNameException:
             self.set_em("Wrong filename")
 
