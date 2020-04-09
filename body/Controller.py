@@ -13,7 +13,14 @@ class Controller:
 
         self.__wpm = None
         self.__source_to_index = {}
-
+        self.__key_to_action = {'space' : self.__do_space,
+                                'alt'   : self.__do_alt,
+                                'shift' : self.__do_shift,
+                                'up'    : self.__do_up,
+                                'down'  : self.__do_down,
+                                'left'  : self.__do_left,
+                                'right' : self.__do_right }
+        
         # defaults
         self.__default_dict = {"wpm" : 250,
                                "dem" : " ",
@@ -45,9 +52,11 @@ class Controller:
         try:
             return self.__model.get_word(self.__source_to_index[self.get_source()])
         except Model.EndOfSourceException as exception:
-            raise Controller.EndOfSourceException() from exception
+            raise Controller.EndOfSourceException from exception
         except Model.StartOfSourceException as exception:
             raise Controller.StartOfSourceException from exception
+        except Model.GreetingException as exception:
+            raise Controller.GreetingException from exception
 
     def __get_orp(self, word_len):
         if word_len == 1:
@@ -77,7 +86,7 @@ class Controller:
     def stop_playing(self):
         self.set_pi(False)
 
-        if self.__timer:
+        if self.__timer.is_not_deleted():
             self.__timer.stop()
 
     def go_to_start(self):
@@ -116,7 +125,7 @@ class Controller:
             if self.__timer.is_active():
                 self.start_playing()
         except Controller.StartTimerException:
-            if self.__timer.is_not_deleted():
+            if self.__timer.is_not_deleted() and self.get_pi():
                 self.start_playing()
         except Controller.StopTimerException:
             self.stop_playing()
@@ -138,6 +147,9 @@ class Controller:
         except Controller.StartOfSourceException:
             self.__source_to_index[self.get_source()] += 1
             self.set_word(self.__get_word())
+        except Controller.GreetingException:
+            self.__source_to_index[self.get_source()] = -1
+            self.set_word(self.get_default_word())
 
     def error_happened(self):
         return self.get_em() is not None
@@ -236,6 +248,37 @@ class Controller:
                 self.set_word(self.__get_word())
         except Model.SourceFileException as exception:
             raise Controller.WrongSourceNameException from exception
+        
+    # 
+    #   Key press events
+    # 
+
+    def react_on_key_press(self, key):
+        self.__key_to_action[key]()
+    
+    def __do_space(self):
+        if self.get_pi():
+            self.stop_playing()
+        else:
+            self.start_playing()
+
+    def __do_alt(self):
+        self.set_ri(True)
+    
+    def __do_shift(self):
+        self.go_to_start()
+
+    def __do_up(self):
+        self.change_speed(self.get_wpm() + 10)
+
+    def __do_down(self):
+        self.change_speed(self.get_wpm() - 10)
+
+    def __do_left(self):
+        self.get_previous_word()
+        
+    def __do_right(self):
+        self.get_next_word()
 
     #
     #   Exceptions
@@ -257,6 +300,9 @@ class Controller:
         pass
 
     class StartTimerException(Exception):
+        pass
+
+    class GreetingException(Exception):
         pass
 
 

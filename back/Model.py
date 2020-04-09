@@ -21,13 +21,15 @@ class Model:
         try:
             with open(self.__source) as file:
                 self.__words = list(filter(None, re.split("[ \n]+", file.read())))
-                # self.__words = file.read().split(" ")
         except FileNotFoundError as exception:
             raise Model.SourceFileException(f"Source file {self.__source} doesn't exists") from exception
 
     def get_word(self, idx):
         if self.__words:
             try:
+                if idx == -2:
+                    raise Model.GreetingException()
+
                 if idx == -1:
                     raise Model.StartOfSourceException()
 
@@ -57,5 +59,8 @@ class Model:
         pass
 
     class StartOfSourceException(Exception):
+        pass
+
+    class GreetingException(Exception):
         pass
 

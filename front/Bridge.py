@@ -1,4 +1,4 @@
-from PySide2.QtCore import Slot, QTimer, Qt, QEvent
+from PySide2.QtCore import Slot, Qt, QEvent
 from PySide2.QtQuickWidgets import QQuickWidget
 
 from body.Controller import Controller
@@ -9,7 +9,13 @@ class Bridge(QQuickWidget):
         super().__init__()
 
         self.__controller = Controller()
-
+        self.__key_to_id = { Qt.Key_Space : "space",
+                             Qt.Key_Shift : "shift",
+                             Qt.Key_Alt   : "alt",
+                             Qt.Key_Up    : "up",
+                             Qt.Key_Down  : "down",
+                             Qt.Key_Left  : "left",
+                             Qt.Key_Right : "right" }
     #
     #   Slots
     #
@@ -72,30 +78,8 @@ class Bridge(QQuickWidget):
     #
 
     def keyPressEvent(self, q_key_event: QEvent):
-
-        if q_key_event.key() == Qt.Key_Alt:
-            self.__controller.set_ri(True)
-            return True
-        elif q_key_event.key() == Qt.Key_Space:
-            if self.__controller.get_pi():
-                self.__controller.stop_playing()
-            else:
-                self.__controller.start_playing()
-            return True
-        elif q_key_event.key() == Qt.Key_Up:
-            self.__controller.change_speed(self.__controller.get_wpm() + 10)
-            return True
-        elif q_key_event.key() == Qt.Key_Down:
-            self.__controller.change_speed(self.__controller.get_wpm() - 10)
-            return True
-        elif q_key_event.key() == Qt.Key_Left:
-            self.__controller.get_previous_word()
-            return True
-        elif q_key_event.key() == Qt.Key_Right:
-            self.__controller.get_next_word()
-            return True
-        elif q_key_event.key() == Qt.Key_Shift:
-            self.__controller.go_to_start()
+        if q_key_event.key() in self.__key_to_id.keys():
+            self.__controller.react_on_key_press(self.__key_to_id[q_key_event.key()])
             return True
 
         super().keyPressEvent(q_key_event)

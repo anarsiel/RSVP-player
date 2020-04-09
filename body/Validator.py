@@ -1,10 +1,10 @@
 class Validator:
 
     def __init__(self):
-        self.__type_to_func = { "wpm": self.__validate_wpm,
-                                "dem": self.__validate_dem,
-                                "ds" : self.__validate_ds,
-                                "zw" : self.__validate_zw }
+        self.__type_to_func = { "wpm" : self.__validate_wpm,
+                                "dem" : self.__validate_dem,
+                                "ds"  : self.__validate_ds,
+                                "zw"  : self.__validate_zw }
 
     #
     #   Private
@@ -33,7 +33,7 @@ class Validator:
     def __validate_zw(self, value):
         if len(value) == 0:
             raise Validator.ValidationException(
-                "Greeting cannot be empty string"
+                "Greeting message cannot be empty string"
             )
 
         if len(value) > 25:
@@ -68,4 +68,3 @@ class Validator:
 
     class ValidationException(Exception):
         pass
-
