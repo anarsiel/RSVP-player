@@ -1,10 +1,10 @@
 # default player setting file
 
 # Speed
-wpm  :   239
+wpm  :   500
 
 # greeting and zero word
-zw   :   Space - Start/Stop
+zw   :   ""
 
 # default source file
 ds   :   example.txt
