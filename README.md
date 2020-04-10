@@ -1,9 +1,11 @@
 # RSVP-player
 Текстовый плеер, основанный на технологии RSVP, для быстрого чтения текстов.
 
-Greeting window            |  Error message            |  In progress
-:-------------------------:|:-------------------------:|:-------------------------:
-![](https://github.com/anarsiel/RSVP-player/blob/master/imgs/playing.png) |  ![](https://github.com/anarsiel/RSVP-player/blob/master/imgs/with_error.png) | ![](https://github.com/anarsiel/RSVP-player/blob/master/imgs/stopped.png)
+<p float="left">
+  <img src="https://github.com/anarsiel/RSVP-player/blob/master/imgs/greeting_example.png" width="285" />
+  <img src="https://github.com/anarsiel/RSVP-player/blob/master/imgs/error_example.png" width="285" /> 
+  <img src="https://github.com/anarsiel/RSVP-player/blob/master/imgs/playing_example.png" width="285" />
+</p>
 
 ## Запуск
 `$ python player.py`
