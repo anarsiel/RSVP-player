@@ -96,7 +96,6 @@ class Controller:
 
     def go_to_start(self):
         self.set_word(self.get_default_word())
-        self.set_em(None)
 
         self.__source_to_index[self.get_source()] = -1
 
