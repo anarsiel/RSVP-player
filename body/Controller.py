@@ -21,9 +21,12 @@ class Controller:
                                 'left': self.__do_left,
                                 'right': self.__do_right}
 
+        self.__word = None
+        self.__error_message = None
+
         # defaults
         self.__default_dict = {"wpm": 250,
-                               "dem": " ",
+                               "dem": None,
                                "ds": "example.txt",
                                "zw": "Space - Start/Stop"}
 
@@ -34,15 +37,16 @@ class Controller:
 
         self.__default_word = self.__default_dict["zw"]
         self.__source = self.__default_dict["ds"]
+        self.set_source(self.get_source())
+
         self.set_wpm(int(self.__default_dict["wpm"]))
         self.__default_em = self.__default_dict["dem"]
 
-        self.set_source(self.get_source())
         # variables for front feedback
-        self.__word = self.__default_word
+        self.set_word(self.__default_word)
+        self.set_em(self.__default_em)
         self.__player_indicator = False
         self.__reading_indicator = False
-        self.__error_message = self.__default_em
 
     #
     #   Private
@@ -140,6 +144,7 @@ class Controller:
         except Controller.EndOfSourceException:
             self.__source_to_index[self.get_source()] -= 1
             self.set_word(self.__get_word())
+            self.stop_playing()
 
     def get_previous_word(self):
         self.__source_to_index[self.get_source()] -= 1
@@ -209,7 +214,11 @@ class Controller:
         return self.__error_message
 
     def set_em(self, value):
-        self.__error_message = value
+        if not value:
+            self.__error_message = " "
+            return
+
+        self.__error_message = "Error: " + value
 
     ####################################
 
@@ -244,6 +253,8 @@ class Controller:
                 self.set_word(self.__get_word())
         except Model.SourceFileException as exception:
             raise Controller.WrongSourceNameException from exception
+        except Controller.StartOfSourceException as exception:
+            self.set_word(self.get_default_word())
 
     #
     #   Key press events
@@ -300,5 +311,3 @@ class Controller:
 
     class GreetingException(Exception):
         pass
-
-
