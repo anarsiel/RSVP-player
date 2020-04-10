@@ -1,4 +1,4 @@
-from front.View import View
+from front.Player import Player
 
-view = View()
-view.start_app()
+player = Player()
+player.start_app()
