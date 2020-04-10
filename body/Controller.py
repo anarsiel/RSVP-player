@@ -13,21 +13,21 @@ class Controller:
 
         self.__wpm = None
         self.__source_to_index = {}
-        self.__key_to_action = {'space' : self.__do_space,
-                                'alt'   : self.__do_alt,
-                                'shift' : self.__do_shift,
-                                'up'    : self.__do_up,
-                                'down'  : self.__do_down,
-                                'left'  : self.__do_left,
-                                'right' : self.__do_right }
-        
-        # defaults
-        self.__default_dict = {"wpm" : 250,
-                               "dem" : " ",
-                               "ds"  : "example.txt",
-                               "zw"  : "Space - Start/Stop"}
+        self.__key_to_action = {'space': self.__do_space,
+                                'alt': self.__do_alt,
+                                'shift': self.__do_shift,
+                                'up': self.__do_up,
+                                'down': self.__do_down,
+                                'left': self.__do_left,
+                                'right': self.__do_right}
 
-        self.__default_dict = RsvppsFileParser.parse (
+        # defaults
+        self.__default_dict = {"wpm": 250,
+                               "dem": " ",
+                               "ds": "example.txt",
+                               "zw": "Space - Start/Stop"}
+
+        self.__default_dict = RsvppsFileParser.parse(
             self.__default_dict,
             ".rsvp-player-settings/default.rsvpps"
         )
@@ -50,7 +50,8 @@ class Controller:
 
     def __get_word(self):
         try:
-            return self.__model.get_word(self.__source_to_index[self.get_source()])
+            return self.__model.get_word(
+                self.__source_to_index[self.get_source()])
         except Model.EndOfSourceException as exception:
             raise Controller.EndOfSourceException from exception
         except Model.StartOfSourceException as exception:
@@ -156,15 +157,10 @@ class Controller:
 
     def get_splitted_word(self):
         word_len = len(self.get_word())
-
         orp = self.__get_orp(word_len)
 
         before = self.get_word()[:orp]
-        spaces = ' ' * (40 - len(before))
-        before = spaces + before
-
         red_symbol = self.get_word()[orp]
-
         after = self.get_word()[orp + 1:]
 
         return [before, red_symbol, after]
@@ -248,14 +244,14 @@ class Controller:
                 self.set_word(self.__get_word())
         except Model.SourceFileException as exception:
             raise Controller.WrongSourceNameException from exception
-        
-    # 
+
+    #
     #   Key press events
-    # 
+    #
 
     def react_on_key_press(self, key):
         self.__key_to_action[key]()
-    
+
     def __do_space(self):
         if self.get_pi():
             self.stop_playing()
@@ -264,7 +260,7 @@ class Controller:
 
     def __do_alt(self):
         self.set_ri(True)
-    
+
     def __do_shift(self):
         self.go_to_start()
 
@@ -276,7 +272,7 @@ class Controller:
 
     def __do_left(self):
         self.get_previous_word()
-        
+
     def __do_right(self):
         self.get_next_word()
 

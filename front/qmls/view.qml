@@ -34,89 +34,108 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 20
 
-//                Row {
-//                    anchors.margins: 1
-////                    anchors.verticalCenter: parent.verticalCenter
-//                    anchors.centerIn: word_window
-//                    spacing: 0
+                anchors.rightMargin: 20 -border.width
+                anchors.topMargin: 20 -border.width
+                anchors.bottomMargin: 20 -border.width
+                anchors.leftMargin: 20 -border.width
+                border.width: 1
+                border.color: "black"
 
-                    Text {
-                        id: main_word1
-                        text: bridge.get_word_A()
-                        padding: 0
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.right: main_word2.left
+                Text {
+                    id: main_word1
+                    text: bridge.get_word_A()
+                    padding: 0
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: main_word2.left
 
-                        FpsTimer {
-                            onTriggered: main_word1.text = bridge.get_word_A()
-                        }
+                    font.pointSize: 25
+                    font.bold: false
+
+                    FpsTimer {
+                        onTriggered: main_word1.text = bridge.get_word_A()
                     }
+                }
 
-                    Text {
-                        id: main_word2
-                        text: bridge.get_word_B()
-                        color: "red"
-                        padding: 0
-                        anchors.centerIn: parent
+                Text {
+                    id: main_word2
+                    text: bridge.get_word_B()
+                    color: "red"
+                    padding: 0
+                    anchors.centerIn: parent
 
-                        FpsTimer {
-                            onTriggered: main_word2.text = bridge.get_word_B()
-                        }
+                    font.pointSize: 25
+                    font.bold: false
+
+                    FpsTimer {
+                        onTriggered: main_word2.text = bridge.get_word_B()
                     }
+                }
 
-                    Text {
-                        id: main_word3
-                        text: bridge.get_word_C()
-                        padding: 0
-                        anchors.left: main_word2.right
-                        anchors.verticalCenter: parent.verticalCenter
+                Text {
+                    id: main_word3
+                    text: bridge.get_word_C()
+                    padding: 0
+                    anchors.left: main_word2.right
+                    anchors.verticalCenter: parent.verticalCenter
 
-                        FpsTimer {
-                            onTriggered: main_word3.text = bridge.get_word_C()
-                        }
+                    font.pointSize: 25
+                    font.bold: false
+
+                    FpsTimer {
+                        onTriggered: main_word3.text = bridge.get_word_C()
                     }
-//                }
+                }
             }
 
             Rectangle {
                 id: bar
                 width: 2 * parent.width / 3
-                height: parent.height / 20
+                height: parent.height / 10
                 anchors.horizontalCenter: parent.horizontalCenter
+
+//                anchors.rightMargin: -2 *border.width
+                anchors.topMargin: -2 * border.width
+                anchors.bottomMargin: -border.width
+//                anchors.leftMargin: - 2 * border.width
+
+                border.color: "black"
+                border.width: 1
+                radius: 1
 
                 anchors.top: word_window.bottom
                 anchors.left: word_window.left
 
-                color: "#AFEEEE"
-
-//                FpsTimer {
-//                    onTriggered: bar_done.width = bridge.get_progress() * bar.width
-//                }
+                color: "#00CED1"
 
                 FpsTimer {
                     onTriggered: bar_not_done.width = (1 - bridge.get_progress()) * bar.width
                 }
-
-//                Rectangle {
-//                    id: bar_done
-//                    height: parent.height
-//                    width: 1
-//
-//                    anchors.left: parent.left
-//                    anchors.top: parent.top
-//
-//                    color: "green"
-//                }
 
                 Rectangle {
                     id: bar_not_done
                     height: parent.height
                     width: parent.width
 
+                    border.color: "black"
+                    border.width: 1
+//                    radius: 1
+
                     anchors.top: parent.top
                     anchors.right: parent.right
 
-                    color: "#20B2AA"
+                    color: "#4682B4"
+                }
+
+                Text {
+                    id: progress_percentage
+                    leftPadding: 5
+                    font.bold: true
+
+                    anchors.fill: parent
+
+                    FpsTimer {
+                        onTriggered: progress_percentage.text = Math.round(bridge.get_progress() * 100) + "%"
+                    }
                 }
             }
         }
@@ -137,8 +156,6 @@ Item {
                 Row {
                     id: speed_row
                     spacing: 17
-//                    anchors.centerIn: parent
-//                    anchors.top: parent.top
 
                     Text {
                         text: "Reading speed:"
@@ -157,12 +174,15 @@ Item {
                         id: pause_indicator
                         height: parent.height
                         width: pause_indicator.height
+                        border.color: "black"
+                        border.width: 1
+                        radius: 1
 
                         FpsTimer {
-                            onTriggered: parent.color = bridge.is_playing() ? "green" : "#BC0022"
+                            onTriggered: parent.color = bridge.is_playing() ? "#00bd00" : "#c20000"
                         }
 
-                        color: "#DB6B88"
+                        color: "#c20000"
                     }
                 }
 
@@ -201,8 +221,8 @@ Item {
 
                     Text {
                         text: ""
-                        color: '#BC0022'
-
+                        color: '#c20000'
+                        font.bold: true
                         FpsTimer {
                             onTriggered: parent.text = (bridge.error_happened() ? bridge.get_error() : null)
                         }
