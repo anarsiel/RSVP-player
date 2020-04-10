@@ -9,11 +9,14 @@ class Timer:
     def __init__(self):
         self.__timer = QTimer()
 
-    def start(self, wpm, function):
+    def start(self, time, function, make_conversion=True):
         self.__timer = QTimer()
-        local_time = self.__convert_2_local_time(wpm)
+
+        if make_conversion:
+            time = self.__convert_2_local_time(time)
+
         self.__timer.timeout.connect(function)
-        self.__timer.start(local_time)
+        self.__timer.start(time)
 
     def stop(self):
         self.__timer.stop()
