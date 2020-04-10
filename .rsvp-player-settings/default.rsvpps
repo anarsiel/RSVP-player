@@ -4,7 +4,7 @@
 wpm  :   500
 
 # greeting and zero word
-zw   :   ""
+zw   :   Space - Start/Stop
 
 # default source file
 ds   :   example.txt
