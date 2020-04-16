@@ -9,7 +9,7 @@ class Bridge(QQuickWidget):
         super().__init__()
 
         self.__controller = Controller()
-        self.__key_to_id = { Qt.Key_Space : "space",
+        self.__key_to_id = { Qt.Key_Escape : "escape",
                              Qt.Key_Shift : "shift",
                              Qt.Key_Up    : "up",
                              Qt.Key_Down  : "down",

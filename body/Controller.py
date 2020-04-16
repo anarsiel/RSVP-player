@@ -13,11 +13,11 @@ class Controller:
 
         self.__wpm = None
         self.__source_to_index = {}
-        self.__key_to_action = {'space': self.__do_shift,
-                                'shift': self.__do_space,
-                                'up': self.__do_up,
-                                'down': self.__do_down,
-                                'left': self.__do_left,
+        self.__key_to_action = {'escape': self.__do_escape,
+                                'shift': self.__do_shift,
+                                'up'   : self.__do_up,
+                                'down' : self.__do_down,
+                                'left' : self.__do_left,
                                 'right': self.__do_right}
 
         self.__word = None
@@ -259,7 +259,7 @@ class Controller:
     def react_on_key_press(self, key):
         self.__key_to_action[key]()
 
-    def __do_space(self):
+    def __do_escape(self):
         if self.get_pi():
             self.stop_playing()
         else:
