@@ -4,10 +4,7 @@
 wpm  :   500
 
 # greeting and zero word
-zw   :   Space - Start/Stop
+zw   :   `Escape` - Start/Stop
 
 # default source file
 ds   :   example.txt
-
-# default error message
-dem  :   ' '
