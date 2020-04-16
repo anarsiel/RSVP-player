@@ -46,7 +46,7 @@ class Validator:
         file_extension = value.split('.')[-1]
         if file_extension != 'txt':
             raise Validator.ValidationException(
-                "File should have '.txt' extension"
+                "File must be '.txt'"
             )
     #
     #   Public

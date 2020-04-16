@@ -193,6 +193,35 @@ Item {
                     spacing: 75
                     topPadding: 5
                     bottomPadding: 0
+
+                    Text {
+                        id: input_file_text
+                        text: "File: "
+                    }
+
+                    TextField {
+                        id: filenamefield
+                        anchors.verticalCenter: input_file_text.verticalCenter
+                        text: bridge.get_default_filename()
+
+                        FpsTimer {
+                            onTriggered: filenamefield.text = bridge.get_filename()
+                        }
+
+                        background: Rectangle {
+                            radius: 2
+                            implicitWidth: 100
+                            implicitHeight: 24
+                            border.color: "#333"
+                            border.width: 1
+                        }
+                    }
+                }
+
+                Row {
+                    spacing: 75
+                    topPadding: 5
+                    bottomPadding: 0
                     leftPadding: 60
 
                     FileDialog {
@@ -225,57 +254,8 @@ Item {
                             fileDialog.open();
                         }
 
-//                        FpsTimer {
-//                            onTriggered: file_open_btn.text = bridge.get_filename()
-//                        }
                     }
 
-//                    TextField {
-//                        id: filenamefield2
-//                        anchors.verticalCenter: input_file_text.verticalCenter
-//                        text: bridge.get_default_filename()
-//
-//                        FpsTimer {
-//                            onTriggered: bridge.can_read() ? bridge.read_filename(filenamefield.text) : null
-//                        }
-//
-//                        background: Rectangle {
-//                            radius: 2
-//                            implicitWidth: 100
-//                            implicitHeight: 24
-//                            border.color: "#333"
-//                            border.width: 1
-//                        }
-//                    }
-                }
-
-                Row {
-                    spacing: 75
-                    topPadding: 5
-                    bottomPadding: 0
-
-                    Text {
-                        id: input_file_text
-                        text: "File: "
-                    }
-
-                    TextField {
-                        id: filenamefield
-                        anchors.verticalCenter: input_file_text.verticalCenter
-                        text: bridge.get_default_filename()
-
-                        FpsTimer {
-                            onTriggered: filenamefield.text = bridge.get_filename()
-                        }
-
-                        background: Rectangle {
-                            radius: 2
-                            implicitWidth: 100
-                            implicitHeight: 24
-                            border.color: "#333"
-                            border.width: 1
-                        }
-                    }
                 }
 
                 Row {
@@ -283,11 +263,11 @@ Item {
                     topPadding: 0
 
                     Text {
-                        text: ""
+                        text: " "
                         color: '#c20000'
                         font.bold: true
                         FpsTimer {
-                            onTriggered: parent.text = (bridge.error_happened() ? bridge.get_error() : null)
+                            onTriggered: parent.text = (bridge.error_happened() ? bridge.get_error() : " ")
                         }
                     }
                 }
