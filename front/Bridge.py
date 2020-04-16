@@ -11,7 +11,6 @@ class Bridge(QQuickWidget):
         self.__controller = Controller()
         self.__key_to_id = { Qt.Key_Space : "space",
                              Qt.Key_Shift : "shift",
-                             Qt.Key_Alt   : "alt",
                              Qt.Key_Up    : "up",
                              Qt.Key_Down  : "down",
                              Qt.Key_Left  : "left",
@@ -56,13 +55,8 @@ class Bridge(QQuickWidget):
     def get_error(self):
         return self.__controller.get_em()
 
-    @Slot(result=bool)
-    def can_read(self):
-        return self.__controller.get_ri()
-
     @Slot(str)
     def read_filename(self, filename):
-        self.__controller.set_ri(False)
         self.__controller.change_source(filename)
 
     @Slot(result=str)
@@ -72,6 +66,10 @@ class Bridge(QQuickWidget):
     @Slot(result=float)
     def get_progress(self):
         return self.__controller.get_progress()
+
+    @Slot(result=str)
+    def get_filename(self):
+        return self.__controller.get_source_cropped()
 
     #
     #   Events

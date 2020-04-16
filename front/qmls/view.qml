@@ -1,10 +1,12 @@
 import QtQuick 2.14
 import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.11
+import QtQuick.Dialogs 1.0
 
 Item {
-    width: 400
-    height: 300
+    id: root
+    width: 600
+    height: 450
     visible: true
 
     Layout.maximumWidth: 400
@@ -128,6 +130,7 @@ Item {
 
                 Text {
                     id: progress_percentage
+                    topPadding: 3
                     leftPadding: 5
                     font.bold: true
 
@@ -190,6 +193,66 @@ Item {
                     spacing: 75
                     topPadding: 5
                     bottomPadding: 0
+                    leftPadding: 60
+
+                    FileDialog {
+                        id: fileDialog
+                        selectFolder: false
+//                        nameFilters: "*.txt"
+                        onAccepted: {
+                            var path = this.fileUrl.toString();
+                            // remove prefixed "file:///"
+                            path = path.replace(/^(file:\/{3})/,"");
+                            // unescape html codes like '%23' for '#'
+                            var cleanPath = decodeURIComponent(path);
+//                            console.log(cleanPath)
+                            bridge.read_filename(cleanPath)
+                        }
+                    }
+
+                    Button {
+                        id: file_open_btn
+                        text: "open file"
+                        background: Rectangle {
+                            radius: 2
+                            implicitWidth: 100
+                            implicitHeight: 24
+                            border.color: "#333"
+                            border.width: 1
+                        }
+
+                        onClicked: {
+                            fileDialog.open();
+                        }
+
+//                        FpsTimer {
+//                            onTriggered: file_open_btn.text = bridge.get_filename()
+//                        }
+                    }
+
+//                    TextField {
+//                        id: filenamefield2
+//                        anchors.verticalCenter: input_file_text.verticalCenter
+//                        text: bridge.get_default_filename()
+//
+//                        FpsTimer {
+//                            onTriggered: bridge.can_read() ? bridge.read_filename(filenamefield.text) : null
+//                        }
+//
+//                        background: Rectangle {
+//                            radius: 2
+//                            implicitWidth: 100
+//                            implicitHeight: 24
+//                            border.color: "#333"
+//                            border.width: 1
+//                        }
+//                    }
+                }
+
+                Row {
+                    spacing: 75
+                    topPadding: 5
+                    bottomPadding: 0
 
                     Text {
                         id: input_file_text
@@ -202,7 +265,7 @@ Item {
                         text: bridge.get_default_filename()
 
                         FpsTimer {
-                            onTriggered: bridge.can_read() ? bridge.read_filename(filenamefield.text) : null
+                            onTriggered: filenamefield.text = bridge.get_filename()
                         }
 
                         background: Rectangle {

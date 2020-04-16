@@ -1,3 +1,4 @@
+import os
 import re
 
 
@@ -9,6 +10,9 @@ class Model:
 
     def set_source(self, source):
         try:
+            if not os.path.exists(source):
+                source = '/' + source
+
             self.__source = source
             self.upload_data()
         except Model.SourceFileException as exception:

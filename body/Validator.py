@@ -1,10 +1,11 @@
 class Validator:
 
     def __init__(self):
-        self.__type_to_func = { "wpm" : self.__validate_wpm,
-                                "dem" : self.__validate_dem,
-                                "ds"  : self.__validate_ds,
-                                "zw"  : self.__validate_zw }
+        self.__type_to_func = { "wpm"      : self.__validate_wpm,
+                                "dem"      : self.__validate_dem,
+                                "zw"       : self.__validate_zw,
+                                "ds"       : self.__validate_filename,
+                                "filename" : self.__validate_filename}
 
     #
     #   Private
@@ -41,9 +42,12 @@ class Validator:
                 "Too long Greeting. Max len: 25"
             )
 
-    def __validate_ds(self, value):
-        pass
-
+    def __validate_filename(self, value):
+        file_extension = value.split('.')[-1]
+        if file_extension != 'txt':
+            raise Validator.ValidationException(
+                "File should have '.txt' extension"
+            )
     #
     #   Public
     #

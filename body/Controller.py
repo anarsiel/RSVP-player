@@ -13,9 +13,8 @@ class Controller:
 
         self.__wpm = None
         self.__source_to_index = {}
-        self.__key_to_action = {'space': self.__do_space,
-                                'alt': self.__do_alt,
-                                'shift': self.__do_shift,
+        self.__key_to_action = {'space': self.__do_shift,
+                                'shift': self.__do_space,
                                 'up': self.__do_up,
                                 'down': self.__do_down,
                                 'left': self.__do_left,
@@ -46,7 +45,6 @@ class Controller:
         self.set_word(self.__default_word)
         self.set_em(self.__default_em)
         self.__player_indicator = False
-        self.__reading_indicator = False
 
     #
     #   Private
@@ -115,12 +113,11 @@ class Controller:
             self.set_source(source)
             self.set_em(None)
             self.set_em(self.__default_dict['dem'])
-        except Controller.WrongSourceNameException:
-            self.set_em("Wrong filename")
-
+        except (Controller.WrongSourceNameException, Validator.ValidationException):
             self.set_pi(pi_copy)
             if self.get_pi():
                 self.start_playing()
+
 
     def change_speed(self, new_wpm):
         try:
@@ -193,14 +190,6 @@ class Controller:
 
     ####################################
 
-    def get_ri(self):
-        return self.__reading_indicator
-
-    def set_ri(self, value: bool):
-        self.__reading_indicator = value
-
-    ####################################
-
     def get_pi(self):
         return self.__player_indicator
 
@@ -240,8 +229,12 @@ class Controller:
     def get_source(self):
         return self.__source
 
+    def get_source_cropped(self):
+        return self.get_source().split('/')[-1]
+
     def set_source(self, source):
         try:
+            self.__validator.validate("filename", source)
             self.__model.set_source(source)
 
             self.__source = source
@@ -251,9 +244,13 @@ class Controller:
             else:
                 self.set_word(self.__get_word())
         except Model.SourceFileException as exception:
+            self.set_em("file do not exists")
             raise Controller.WrongSourceNameException from exception
         except Controller.StartOfSourceException as exception:
             self.set_word(self.get_default_word())
+        except Validator.ValidationException as exception:
+            self.set_em(str(exception))
+            raise exception
 
     #
     #   Key press events
@@ -267,9 +264,6 @@ class Controller:
             self.stop_playing()
         else:
             self.start_playing()
-
-    def __do_alt(self):
-        self.set_ri(True)
 
     def __do_shift(self):
         self.go_to_start()
@@ -310,3 +304,4 @@ class Controller:
 
     class GreetingException(Exception):
         pass
+
